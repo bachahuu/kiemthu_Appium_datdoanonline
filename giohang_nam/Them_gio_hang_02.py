@@ -30,9 +30,10 @@ print("✅ Bước 1: Đăng nhập thành công!")
 wait.until(EC.presence_of_element_located((By.XPATH, '(//android.widget.ImageView[@resource-id="com.example.datdoanonline:id/img_thucdon"])[2]'))).click()
 print("✅ Bước 2: Đã chuyển sang trang thực đơn!")
 
-# Bước 3: Chọn sản phẩm đầu tiên từ danh sách thực đơn
+# Bước 3: Chọn món Cheese Pizza (vị trí thứ 2)
+item_added_name = "Gà sốt mắm ngọt"
 wait.until(EC.element_to_be_clickable((By.XPATH, '//androidx.recyclerview.widget.RecyclerView[@resource-id="com.example.datdoanonline:id/recyclerViewFood"]/android.widget.FrameLayout[1]/android.widget.LinearLayout'))).click()
-print("✅ Bước 3: Đã chọn sản phẩm đầu tiên trong thực đơn!")
+print(f"✅ Bước 3: Đã chọn món {item_added_name} trong thực đơn!")
 
 # Bước 4: Tăng số lượng sản phẩm lên 3
 btn_plus = wait.until(EC.element_to_be_clickable((By.ID, "com.example.datdoanonline:id/btn_plus")))
@@ -48,12 +49,16 @@ print("✅ Bước 5: Sản phẩm đã được thêm vào giỏ hàng!")
 wait.until(EC.element_to_be_clickable((By.ID, "com.example.datdoanonline:id/icon_giohang"))).click()
 print("✅ Bước 6: Đã mở giỏ hàng!")
 
-# Kiểm tra sản phẩm đã thêm vào giỏ hàng
-cart_items = driver.find_elements(By.XPATH, "//android.widget.ListView[@resource-id='com.example.datdoanonline:id/listview_items']/android.view.ViewGroup/android.widget.LinearLayout")
-if len(cart_items) > 0:
-    print("🎉✅ Kiểm thử thành công: Sản phẩm đã được thêm vào giỏ hàng!")
-else:
-    print("❌ Kiểm thử thất bại: Không tìm thấy sản phẩm trong giỏ hàng.")
+# Bước 6: Kiểm tra món vừa thêm đã có trong giỏ hàng chưa
+xpath_check = f'//android.widget.TextView[@resource-id="com.example.datdoanonline:id/item_name" and @text="{item_added_name}"]'
+try:
+    item_element = driver.find_element(By.XPATH, xpath_check)
+    if item_element.is_displayed():
+        print(f"🎉✅ Kiểm thử thành công: Món {item_added_name} đã được thêm vào giỏ hàng!")
+    else:
+        print(f"❌ Kiểm thử thất bại: Món {item_added_name} không hiển thị trong giỏ hàng.")
+except:
+    print(f"❌ Kiểm thử thất bại: Không tìm thấy món {item_added_name} trong giỏ hàng.")
 
 # Đóng ứng dụng
 # driver.quit()
